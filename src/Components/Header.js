@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         alignSelf: 'flex-end',
+        flexWrap: 'wrap',
     },
     iconButton: {
         width: 100, height: 100,
@@ -44,22 +45,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-
 export default function ProminentAppBar() {
     const [dobbelOpen, setDobbelOpen] = React.useState(false);
     const [loginOpen, setLoginOpen] = React.useState(false);
+
     const handleDobbelOpen = () => {
         setDobbelOpen(true);
     };
     const handleDobbelClose = () => {
        setDobbelOpen(false)
     };
+
     const handleLoginOpen = () => {
         setLoginOpen(true);
     };
     const handleLoginClose = () => {
         setLoginOpen(false)
     };
+
 
     const classes = useStyles();
 
@@ -71,7 +74,7 @@ export default function ProminentAppBar() {
                     <IconButton color={'inherit'} onClick={handleDobbelOpen}>
                         <Icon icon={diceIcon} width={40} height={40}/>
                     </IconButton>
-                    <Typography className={classes.title} variant="h5" noWrap>
+                    <Typography className={classes.title} variant="h6" noWrap>
                         Huize Achtersteboven
                     </Typography>
                     <IconButton color={'inherit'} onClick={handleLoginOpen}>

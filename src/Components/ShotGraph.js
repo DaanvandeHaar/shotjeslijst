@@ -7,7 +7,6 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 
 export default function ShotGraph() {
-
     const classes = makeStyles((theme) => ({
         root: {
             maxWidth: 345,
@@ -41,7 +40,6 @@ export default function ShotGraph() {
                 <Chart
                     data={data}
                 >
-
                     <BarSeries
                         valueField="aantal"
                         argumentField="naam"

@@ -18,8 +18,9 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {getShotjes,removeShotje, addShotje} from '../shotjesDao'
 import firebase from 'firebase/app'
+
 require("firebase/firestore");
-require("firebase/auth")
+require("firebase/auth");
 
 // config for database
 const firebaseConfig = {
@@ -52,6 +53,10 @@ const tableIcons = {
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
+//
+// export const getClientIp = async () => await publicIp.v4({
+//     fallbackUrls: [ "https://ifconfig.co/ip" ]
+// });
 
 
 
@@ -59,7 +64,7 @@ export default function EditTable() {
 
     var [state, setState] = React.useState({
         columns: [
-            { title: 'ID', field: 'id', type: 'numeric', editable: false},
+            { title: 'ID', field: 'id', editable: false},
             { title: 'Uitdeler', field: 'uitdeler' ,lookup: {
                     'Daan':'Daan',
                     'Merel': 'Merel',
@@ -104,6 +109,8 @@ export default function EditTable() {
     const handleCreateShotje = async (shotje)  => {
         firebase.auth().onAuthStateChanged(async function(user) {
             if(user){
+                shotje.metaData= {canceled: false, added: 'manual'};
+                shotje.uitgedeeld = false;
                 await addShotje(shotje).then(async () => {
                     setData(await getShotjes());
             })}
@@ -139,7 +146,7 @@ export default function EditTable() {
             icons={tableIcons}
             isLoading={isLoading}
             editable={{
-                isEditable: rowData => rowData.name === "id", // make id not editable
+                isEditable: rowData => rowData.name === "id",
                 onRowAdd: (newData) => handleCreateShotje(newData),
                 onRowDelete: (oldData) => handleDeleteShotje(oldData.id)
 

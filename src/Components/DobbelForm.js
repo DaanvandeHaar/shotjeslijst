@@ -1,25 +1,20 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import Paper from "@material-ui/core/Paper";
-import {SelectProps as renderValue} from "@material-ui/core/Select/Select";
 import {addShotje} from '../shotjesDao'
 import firebase from 'firebase/app'
+import publicIp from "public-ip";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 require("firebase/auth");
+
 
 
 function Copyright() {
@@ -38,9 +33,7 @@ function Copyright() {
 const bovenData = [ 'Daan','Ines', 'Domi', 'Merel', 'Thom'];
 const benedenData = ['Marlot', 'Yash', 'Ellen', 'Fleur','Toine'];
 const keukenData = ['Daan', 'Ines', 'Domi', 'Merel', 'Thom','Marlot', 'Yash', 'Ellen', 'Fleur', 'Toine'];
-const waarData = ['boven', 'beneden', 'keuken'
-
-];
+const waarData = ['boven', 'beneden', 'keuken'];
 
 
 const useStyles = makeStyles((theme) => ({
@@ -67,8 +60,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+export const getClientIp = async () => await publicIp.v4({
+    fallbackUrls: [ "https://ifconfig.co/ip" ]
+});
 
-export default function SignIn() {
+
+export default function Dobbel() {
     const classes = useStyles();
 
     var [waar, setWaar] = React.useState(null);
@@ -82,9 +79,10 @@ export default function SignIn() {
         await setWie(event.target.value);
     };
 
-    function DobbelShotje(){
+    async function DobbelShotje() {
         var user = firebase.auth().currentUser;
-        if(user){
+        var ipAdr = await getClientIp();
+        if (user) {
             switch (waar) {
                 case 'Boven':
                     var bovenTemp = bovenData.slice(0);
@@ -92,12 +90,26 @@ export default function SignIn() {
                     bovenTemp.splice(bovenTemp.indexOf(wie.toString()), 1);
                     console.log(bovenTemp);
                     var uitdeler = bovenTemp.sample();
-                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler))
-                    {
-                        addShotje({ontvanger: wie, uitdeler: uitdeler, datum: Date().now });
 
+                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler)) {
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: false,
+                            metaData: {canceled: false, added: 'dobbel', ip: ipAdr.toString()},
+                        });
+                        break;
+                    } else {
+                        alert("Niet toegevoegd!");
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: true,
+                            metaData: {canceled: true, added: 'dobbel', ip: ipAdr.toString()}
+                        });
                     }
-                    else {alert("Niet toegevoegd!")}
                     break;
                 case 'Beneden':
                     var benedenTemp = benedenData.slice(0);
@@ -105,28 +117,56 @@ export default function SignIn() {
                     benedenTemp.splice(benedenTemp.indexOf(wie.toString()), 1);
                     console.log(benedenTemp);
                     var uitdeler = benedenTemp.sample();
-                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler))
-                    {
-                        addShotje({ontvanger: wie, uitdeler: uitdeler, datum: Date().now });
 
+                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler)) {
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: false,
+                            metaData: {canceled: false, added: 'dobbel', ip: ipAdr.toString()},
+                        });
+                        break;
+                    } else {
+                        alert("Niet toegevoegd!");
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: true,
+                            metaData: {canceled: true, added: 'dobbel', ip: ipAdr.toString()}
+                        });
                     }
-                    else {alert("Niet toegevoegd!")}
                     break;
+
                 case 'Keuken':
                     var keukenTemp = keukenData.slice(0);
                     console.log(keukenTemp);
                     keukenTemp.splice(keukenTemp.indexOf(wie.toString()), 1);
                     console.log(keukenTemp);
                     var uitdeler = keukenTemp.sample();
-                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler))
-                    {
-                        addShotje({ontvanger: wie, uitdeler: uitdeler, datum: Date().now });
 
+                    if (window.confirm("Shotje voor: " + wie.toString() + " uit te delen door: " + uitdeler)) {
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: false,
+                            metaData: {canceled: false, added: 'dobbel', ip: ipAdr.toString()},
+                        });
+                        break;
+                    } else {
+                        alert("Niet toegevoegd!");
+                        await addShotje({
+                            ontvanger: wie,
+                            uitdeler: uitdeler,
+                            datum: Date().now,
+                            uitgedeeld: true,
+                            metaData: {canceled: true, added: 'dobbel', ip: ipAdr.toString()}
+                        });
                     }
-                    else {alert("Niet toegevoegd!")}
             }
-        }
-        else{
+        } else {
             alert('Log in!')
         }
     }

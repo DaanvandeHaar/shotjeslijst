@@ -1,5 +1,5 @@
 import firebase from 'firebase/app'
-import MaterialTable from "material-table";
+var crypto = require("crypto");
 
 export async function getShotjes() {
     try {
@@ -23,10 +23,10 @@ export async function getShotjes() {
 
         var verloopdatum = new Date();
         verloopdatum.setMonth(verloopdatum.getMonth() - 2);
-        const snapshot = await db.collection('shotjes').where("datum", ">=", verloopdatum).get();
+        var query = await db.collection('shotjes').where("datum", ">=", verloopdatum).where(  "uitgedeeld", "in", ["false", false ]);
+        let snapshot = await query.get();
         var map =  snapshot.docs.map(doc => doc.data());
-        const formatData = await FormatShotjes(map);
-        return formatData;
+        return await FormatShotjes(map);
     }
     catch (e) {
         console.log(e);
@@ -38,6 +38,7 @@ export async function FormatShotjes(map){
     for(let key in data){
         try {
             data[key].datum = data[key].datum.toDate();
+            console.log(data.id);
         }
         catch (e) {
 
@@ -98,12 +99,13 @@ export async function addShotje(shotje){
     }
 
     var db = firebase.firestore();
-    db.collection("shotjes").add({
+    await db.collection("shotjes").add({
         ontvanger: shotje.ontvanger,
         uitdeler: shotje.uitdeler,
         datum: shotje.datum,
-        id: Math.floor(Math.random() * 1000000) + 1,
-        uitgedeeld: 'false'
+        id: Math.random().toString(36).slice(2),
+        uitgedeeld: shotje.uitgedeeld,
+        metaData : shotje.metaData,
 
     })
         .then(function(docRef) {
@@ -122,24 +124,9 @@ export async function removeShotje(id){
     var query = db.collection('shotjes').where('id','==',id);
     query.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            return doc.ref.delete();
+            return doc.ref.update({uitgedeeld: true})
         });
     });
 
 }
 
-    async function getMax(arr) {
-        var data = await arr;
-        var maxProp = null;
-        var maxValue = -1;
-        for (var prop in await data) {
-            if (await data.hasOwnProperty(prop)) {
-                var value = await data[prop];
-                if (value > maxValue) {
-                    maxProp = prop;
-                    maxValue = value;
-                    await maxValue;
-                }
-            }
-        }
-    }

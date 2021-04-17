@@ -6,6 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
+// npm install --save-dev @iconify/react @iconify-icons/mdi
+import { Icon, InlineIcon } from '@iconify/react';
+import closeIcon from '@iconify-icons/mdi/close';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -13,7 +16,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import firebase from 'firebase/app'
+import { Alert } from '@material-ui/lab';
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
 require("firebase/auth");
+
 
 function Copyright() {
     return (
@@ -51,36 +58,62 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
     var [email, setEmail] = React.useState(null);
     var [password, setPassword] = React.useState(null);
+    var [warningOpen, setWarningOpen] = React.useState(false);
 
     const handleEmailChange = async (event) => {
         await setEmail(event.target.value);
-        console.log(email)
     };
 
     const handlePasswordChange = async (event) => {
         await setPassword(event.target.value);
-        console.log(password)
+    };
+
+    const handleWarningOpen = () => {
+        setWarningOpen(true)
+    };
+
+    const handleWarningClose = () => {
+        setWarningOpen(false)
     };
 
     const classes = useStyles();
 
     async function login(){
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        firebase.auth().signOut();
+        await firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
             var errorCode = error.code;
             var errorMessage = error.message;
             console.log(errorCode + " ==> " + errorMessage);
         });
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                alert("loged in as: " + user.uid)
+        await firebase.auth().onAuthStateChanged(async function (user) {
+            if (await user) {
+                window.location.reload()
             } else {
-                alert("Incorrect E-mail or password!")
+                handleWarningOpen();
             }
         });
     }
 
     return (
         <Container component="main" maxWidth="xs">
+            <Collapse in={warningOpen}>
+                <Alert severity="error"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setWarningOpen(false);
+                            }}
+                        >
+                            <Icon fontSize="inherit"  icon={closeIcon}/>
+                        </IconButton>
+                    }
+                >
+                    Wrong username or password!
+                </Alert>
+            </Collapse>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -98,8 +131,7 @@ export default function Login() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={login}
-                    >
+                        onClick={login} >
                         Sign In
                     </Button>
                 </form>

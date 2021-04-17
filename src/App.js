@@ -5,6 +5,7 @@ import Header from './Components/Header'
 import EditTable from './Components/EditTable'
 import ShotGraph from "./Components/ShotGraph";
 import Paper from "@material-ui/core/Paper";
+import Footer from "./Components/Footer";
 
 
 
@@ -14,6 +15,7 @@ function App() {
       <Header/>
       <EditTable/>
       <ShotGraph/>
+      <Footer/>
     </div>
   );
 }
