@@ -30,9 +30,9 @@ function Copyright() {
     );
 }
 
-const bovenData = [ 'Daan','Ines', 'Domi', 'Merel', 'Thom'];
-const benedenData = ['Marlot', 'Yash', 'Ellen', 'Fleur','Toine'];
-const keukenData = ['Daan', 'Ines', 'Domi', 'Merel', 'Thom','Marlot', 'Yash', 'Ellen', 'Fleur', 'Toine'];
+const bovenData = [ 'Daan','UnknownUser', 'Ellen', 'Merel', 'Thom'];
+const benedenData = ['Marlot', 'Yash', 'Bob', 'Fleur','Toine'];
+const keukenData = ['Daan', 'UnknownUser', 'Ellen', 'Merel', 'Thom','Marlot', 'Yash', 'Ellen', 'Fleur', 'Toine'];
 const waarData = ['boven', 'beneden', 'keuken'];
 
 
@@ -218,10 +218,10 @@ export default function Dobbel() {
                                 >
                                     <option aria-label="None" value="    " />
                                     <option key={1} value="Daan">Daan</option>
-                                    <option key={2} value="Ines">Ines</option>
+                                    <option key={2} value="UnknownUser">UnknownUser</option>
                                     <option key={3} value="Merel">Merel</option>
                                     <option key={4} value="Thom">Thom</option>
-                                    <option key={5} value="Domi">Domi</option>
+                                    <option key={5} value="Bob">Bob</option>
                                     <option key={6} value="Marlot">Marlot</option>
                                     <option key={7} value="Yash">Yash</option>
                                     <option key={8} value="Ellen">Ellen</option>
